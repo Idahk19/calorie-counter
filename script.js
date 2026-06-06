@@ -54,8 +54,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Clear form inputs after submission
         foodForm.reset();
-    });
+});
 
+     // Reset button
+
+        const resetBtn = document.getElementById("resetBtn");
+
+        resetBtn.addEventListener("click", function () {
+
+        const confirmReset = confirm("Are you sure you want to reset your calorie tracker?");
+
+        if (!confirmReset) return;
+
+        // Clear array
+        foods = [];
+
+        // Clear localStorage
+        localStorage.removeItem("foods");
+
+        // Update UI
+        displayFoods();
+        updateTotalCalories();
+      });
+      
     // Runs once when page loads to show existing items (if any)
 
     displayFoods();
