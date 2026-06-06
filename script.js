@@ -1,9 +1,9 @@
-
-
 // This array stores all food items added by the user
 // It is global so it can be accessed by all functions (add, delete, display)
 
-let foods = [];
+
+//Load saved foods from browser memory, and if nothing exists, start with an empty list.
+let foods = JSON.parse(localStorage.getItem("foods")) || [];
 
 
 // Ensures all HTML elements are ready before we try to access them
@@ -43,6 +43,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Add food object into array
         foods.push(foodItem);
+
+        // save to localstorage
+        saveToLocalStorage(); 
 
         // Update UI to show new food
         displayFoods();
@@ -119,6 +122,9 @@ function deleteFood(id) {
     foods = foods.filter(function (food) {
         return food.id !== id;
     });
+    
+    // Save to local Storage
+    saveToLocalStorage(); 
 
     // Update UI after deletion
     displayFoods();
@@ -127,6 +133,7 @@ function deleteFood(id) {
     updateTotalCalories();
 }
 
+// calculates the total
 function updateTotalCalories() {
 
     let total = 0;
@@ -141,3 +148,9 @@ function updateTotalCalories() {
 }
 
 updateTotalCalories();
+
+// saves to local Storage
+
+function saveToLocalStorage(){
+    localStorage.setItem("foods", JSON.stringify(foods))
+}
