@@ -1,58 +1,121 @@
-// DOM manipulation 
-document.addEventListener("DOMContentLoaded", function () {
-const foodForm = document.getElementById("foodForm");
-const foodNameInput = document.getElementById("foodName");
-const foodCaloriesInput = document.getElementById("foodCalories");
-const foodList = document.getElementById("foodList");
 
-// store foods in an array
+
+// This array stores all food items added by the user
+// It is global so it can be accessed by all functions (add, delete, display)
+
 let foods = [];
- 
-//This runs when the user submits the form
-foodForm.addEventListener("submit", function(event){
-    event.preventDefault();
-    
-    // Get values from the input fields
-    const name = foodNameInput.value;
-    const calories = foodCaloriesInput.value;
 
-    // create a food object to store both values together
-    const foodItem = {
-        id: Date.now(),
-        name: name,
-        calories: Number(calories)
-       
-    };
-     // Add the new food object into the foods array
-    foods.push(foodItem);
 
-    // Update the UI to show the new food item
+// Ensures all HTML elements are ready before we try to access them
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Get form element (used for submitting food items)
+    const foodForm = document.getElementById("foodForm");
+
+    // Input for food name
+    const foodNameInput = document.getElementById("foodName");
+
+    // Input for calorie value
+    const foodCaloriesInput = document.getElementById("foodCalories");
+
+    // UL container where food items will be displayed
+    const foodList = document.getElementById("foodList");
+
+
+    // Runs every time the form is submitted
+
+    foodForm.addEventListener("submit", function (event) {
+
+        // Prevent page refresh on submit
+        event.preventDefault();
+
+        // Get values from input fields
+        const name = foodNameInput.value;
+        const calories = foodCaloriesInput.value;
+
+        // Create a food object to store both values together
+        const foodItem = {
+            id: Date.now(),          // unique ID for deleting
+            name: name,              // food name
+            calories: Number(calories) // convert calories to number
+        };
+
+        // Add food object into array
+        foods.push(foodItem);
+
+        // Update UI to show new food
+        displayFoods();
+
+        // Clear form inputs after submission
+        foodForm.reset();
+    });
+
+    // Runs once when page loads to show existing items (if any)
+
     displayFoods();
-
-    // Clear the form after submission
-    foodForm.reset();
-  
 });
+
+// This function updates the UI and shows all food items
 
 function displayFoods() {
 
-    // Clear the list first so we don't duplicate items
+    // Get the UL element from HTML
+    const foodList = document.getElementById("foodList");
+
+    // Clear previous list to avoid duplicates
     foodList.innerHTML = "";
 
-    // Loop through each food item in the array
+    // Loop through all food items in the array
     foods.forEach(function (food) {
 
-        // Create a new list item (<li>)
+        // Create a new list item
         const li = document.createElement("li");
 
-    
-        // Insert food name and calories into the list item
+        // Add Tailwind styling for better UI
+        li.classList.add(
+            "flex",
+            "justify-between",
+            "items-center",
+            "bg-gray-100",
+            "p-2",
+            "rounded"
+        );
+
+        // Insert food data into HTML
         li.innerHTML = `
             <span>${food.name} - ${food.calories} cal</span>
+
+            <!-- Delete button for each item -->
+            <button 
+                onclick="deleteFood(${food.id})"
+                class="bg-red-500 text-white px-2 py-1 rounded"
+            >
+                Delete
+            </button>
         `;
 
-        // Add the list item to the food list in HTML
+        // Add item to the list
         foodList.appendChild(li);
     });
 }
-})
+
+
+// Runs when user clicks delete button
+
+function deleteFood(id) {
+
+    // Ask user for confirmation before deleting
+    const confirmDelete = confirm("Are you sure you want to delete this food item?");
+
+    // If user clicks Cancel, stop function
+    if (!confirmDelete) return;
+
+    // Remove selected food item from array
+    foods = foods.filter(function (food) {
+        return food.id !== id;
+    });
+
+    // Update UI after deletion
+    displayFoods();
+}
