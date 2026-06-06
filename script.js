@@ -47,6 +47,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // Update UI to show new food
         displayFoods();
 
+        updateTotalCalories();
+
         // Clear form inputs after submission
         foodForm.reset();
     });
@@ -54,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Runs once when page loads to show existing items (if any)
 
     displayFoods();
+    updateTotalCalories();
 });
 
 // This function updates the UI and shows all food items
@@ -101,6 +104,7 @@ function displayFoods() {
 }
 
 
+
 // Runs when user clicks delete button
 
 function deleteFood(id) {
@@ -118,4 +122,22 @@ function deleteFood(id) {
 
     // Update UI after deletion
     displayFoods();
+   
+    // update calories
+    updateTotalCalories();
 }
+
+function updateTotalCalories() {
+
+    let total = 0;
+
+    // Loop through all food items
+    foods.forEach(function (food) {
+        total += food.calories;
+    });
+
+    // Display total in HTML
+    document.getElementById("totalCalories").textContent = total;
+}
+
+updateTotalCalories();

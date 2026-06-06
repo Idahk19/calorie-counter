@@ -18,14 +18,23 @@
                 <label for="food-calories">Calories</label>
                 <input type="text" name="food-calories" id="foodCalories" required>
             </div>
+
             <button type="submit">Add Food</button>
         </form>
+
 
         <div>
             <h2>Today's Food Items</h2>
             <ul id="foodList">
 
             </ul>
+        </div>
+        <!-- TOTAL CALORIES DISPLAY -->
+        <div class="mt-4 text-center">
+            <h2 class="text-xl font-bold">
+            Total Calories:
+            <span id="totalCalories">0</span>
+            </h2>
         </div>
     </div>
     <script src="script.js"></script>
