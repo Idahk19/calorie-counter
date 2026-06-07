@@ -98,6 +98,8 @@ foodForm.addEventListener("submit", function (event) {
         // Hide manual input box (in case it was open before)
         hideManualBox();
 
+        updateProgressBar();
+
         return; // stop function here
     }
 
@@ -131,13 +133,23 @@ foodForm.addEventListener("submit", function (event) {
 
         // Update UI
         displayFoods();
+
         updateTotalCalories();
+
+        updateProgressBar();
+
+
     });
 
 
     // Initial render when page loads
     displayFoods();
+
     updateTotalCalories();
+
+    updateProgressBar();
+
+
 });
 
 
@@ -204,7 +216,10 @@ function deleteFood(id) {
 
     // Refresh UI
     displayFoods();
+
     updateTotalCalories();
+
+    updateProgressBar();
 }
 
 
@@ -284,9 +299,40 @@ document.getElementById("saveCaloriesBtn").addEventListener("click", function ()
 
     // Save and update UI
     saveToLocalStorage();
+
     displayFoods();
+
     updateTotalCalories();
 
     // Clear modal + reset state
     hideManualBox();
+
+    updateProgressBar();
 });
+
+// progress bar
+
+const DAILY_GOAL = 2000;
+
+function updateProgressBar() {
+
+    let total = 0;
+
+    // calculate total calories
+    foods.forEach(food => {
+        total += food.calories;
+    });
+
+    // calculate percentage
+    let percent = (total / DAILY_GOAL) * 100;
+
+    // prevent going above 100%
+    if (percent > 100) percent = 100;
+
+    // update bar width
+    document.getElementById("progressBar").style.width = percent + "%";
+
+    // update text
+    document.getElementById("progressText").textContent =
+        `${total} / ${DAILY_GOAL} calories (${Math.round(percent)}%)`;
+}
