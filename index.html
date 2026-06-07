@@ -6,88 +6,107 @@
     <title>Calorie Counter</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
 
-    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
+    <!-- MAIN CONTAINER -->
+    <div class="bg-white shadow-lg rounded-lg p-4 sm:p-6 w-full max-w-md">
 
-        <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">
+        <!-- TITLE -->
+        <h1 class="text-2xl sm:text-3xl font-bold text-center mb-6 text-gray-800">
             Calorie Counter
         </h1>
-      
 
+        <!-- FORM -->
         <form id="foodForm" class="space-y-4">
 
             <div>
                 <label for="foodName" class="block font-medium text-gray-700 mb-1">
                     Food Name:
                 </label>
+
                 <input
                     type="text"
                     id="foodName"
                     name="food-name"
                     placeholder="e.g. Bread"
                     required
-                    class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    class="w-full border border-gray-300 rounded-md p-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
             </div>
 
             <button
                 type="submit"
-                class="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition"
+                class="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition text-sm sm:text-base"
             >
                 Add Food
             </button>
 
         </form>
-        <div id="manualCaloriesBox" class="mt-3 hidden">
-        <p class="text-red-500 font-semibold" id="notFoundMsg"></p>
 
-          <input
-             type="number"
-             id="manualCaloriesInput"
-            placeholder="e.g. 200"
-             class="border p-2 mt-2 w-full"
-         />
-         <button id="saveCaloriesBtn" class="bg-green-500 text-white px-3 py-1 rounded w-full">
-            Save
-        </button>
+        <!-- MANUAL CALORIES BOX -->
+        <div id="manualCaloriesBox" class="mt-3 hidden">
+
+            <p class="text-red-500 font-semibold text-sm sm:text-base" id="notFoundMsg"></p>
+
+            <input
+                type="number"
+                id="manualCaloriesInput"
+                placeholder="e.g. 200"
+                class="border p-2 mt-2 w-full text-sm sm:text-base"
+            />
+
+            <button
+                id="saveCaloriesBtn"
+                class="bg-green-500 text-white px-3 py-2 rounded w-full mt-2 text-sm sm:text-base"
+            >
+                Save
+            </button>
+
         </div>
 
+        <!-- FOOD LIST -->
         <div class="mt-6">
-            <h2 class="text-xl font-semibold mb-3 text-gray-800">
+
+            <h2 class="text-lg sm:text-xl font-semibold mb-3 text-gray-800">
                 Today's Food Items
             </h2>
 
-            <ul id="foodList" class="space-y-2">
+            <ul id="foodList" class="space-y-2 text-sm sm:text-base">
             </ul>
+
         </div>
 
+        <!-- TOTAL CALORIES -->
         <div class="mt-6 text-center">
-            <h2 class="text-xl font-bold text-gray-800">
+
+            <h2 class="text-lg sm:text-xl font-bold text-gray-800">
                 Total Calories:
-                <span id="totalCalories" class="text-green-600">
-                    0
-                </span>
+                <span id="totalCalories" class="text-green-600">0</span>
             </h2>
+
         </div>
+
+        <!-- PROGRESS BAR -->
         <div class="mt-4">
 
-    <p class="font-semibold">Daily Progress</p>
+            <p class="font-semibold text-sm sm:text-base">Daily Progress</p>
 
-    <div class="w-full bg-gray-300 rounded h-4 mt-2">
-        <div id="progressBar"
-            class="bg-green-500 h-4 rounded"
-            style="width: 0%">
+            <div class="w-full bg-gray-300 rounded h-3 sm:h-4 mt-2">
+                <div id="progressBar"
+                    class="bg-green-500 h-3 sm:h-4 rounded"
+                    style="width: 0%">
+                </div>
+            </div>
+
+            <p id="progressText" class="text-xs sm:text-sm mt-1"></p>
+
         </div>
-    </div>
 
-    <p id="progressText" class="text-sm mt-1"></p>
-
-</div>
-
+        <!-- RESET BUTTON -->
         <button
             id="resetBtn"
-            class="w-full mt-4 bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition"
+            class="w-full mt-4 bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition text-sm sm:text-base"
         >
             Reset
         </button>
