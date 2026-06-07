@@ -1,105 +1,155 @@
-// This array stores all food items added by the user
-// It is global so it can be accessed by all functions (add, delete, display)
 
+// ===============================
+// GLOBAL STATE
+// ===============================
 
-//Load saved foods from browser memory, and if nothing exists, start with an empty list.
+// Load saved foods from localStorage (if any exist)
+// If nothing exists, start with an empty array
 let foods = JSON.parse(localStorage.getItem("foods")) || [];
 
+// This will store foods loaded from foods.json (our "API database")
+let foodDatabase = [];
 
-// Ensures all HTML elements are ready before we try to access them
+// This flag ensures we don't search before data is loaded
+let isDatabaseReady = false;
 
+
+// ===============================
+// WAIT FOR HTML TO LOAD FIRST
+// ===============================
 document.addEventListener("DOMContentLoaded", function () {
 
-    // Get form element (used for submitting food items)
+    // Get form elements from HTML
     const foodForm = document.getElementById("foodForm");
-
-    // Input for food name
     const foodNameInput = document.getElementById("foodName");
-
-    // Input for calorie value
-    const foodCaloriesInput = document.getElementById("foodCalories");
-
-    // UL container where food items will be displayed
     const foodList = document.getElementById("foodList");
+    const resetBtn = document.getElementById("resetBtn");
 
 
-    // Runs every time the form is submitted
+    // ===============================
+    // FETCH FOOD DATABASE (foods.json)
+    // ===============================
 
+    fetch("food.json")
+    .then(res => res.json())
+    .then(data => {
+
+        // Store the loaded data into our global database variable
+        foodDatabase = data;
+
+       // Mark database as ready so other parts of the app can use it safely
+        isDatabaseReady = true;
+
+        console.log("Database loaded");
+
+    })
+    .catch(err => {
+           console.log("Failed to load database:", err);
+            submitBtn.textContent = "Failed to load data";
+    });
+
+    // ===============================
+    // ADD FOOD (FORM SUBMISSION)
+    // ===============================
     foodForm.addEventListener("submit", function (event) {
 
-        // Prevent page refresh on submit
+        // Stop page from refreshing when form is submitted
         event.preventDefault();
 
-        // Get values from input fields
-        const name = foodNameInput.value;
-        const calories = foodCaloriesInput.value;
+        // Prevent user from searching before data is ready
+        if (!isDatabaseReady) {
+            alert("Food database is still loading. Please wait...");
+            return;
+        }
 
-        // Create a food object to store both values together
+        // Get user input and remove extra spaces
+        const name = foodNameInput.value.trim();
+
+        // ===============================
+        // SEARCH FOOD IN DATABASE
+        // ===============================
+        const foundFood = foodDatabase.find(function (food) {
+
+            // Compare ignoring case and spaces
+            return food.name.toLowerCase().includes(name.toLowerCase());
+        });
+
+        // If no match is found
+        if (!foundFood) {
+            alert("Food not found in database");
+            foodForm.reset();
+            return;
+        }
+
+        // ===============================
+        // CREATE FOOD OBJECT
+        // ===============================
         const foodItem = {
-            id: Date.now(),          // unique ID for deleting
-            name: name,              // food name
-            calories: Number(calories) // convert calories to number
+            id: Date.now(),               // unique ID for deletion
+            name: foundFood.name,         // name from database
+            calories: foundFood.calories  // calories from database
         };
 
-        // Add food object into array
+        // Add new food to today's list
         foods.push(foodItem);
 
-        // save to localstorage
-        saveToLocalStorage(); 
+        // Save updated list to localStorage
+        saveToLocalStorage();
 
-        // Update UI to show new food
+        // Update UI
         displayFoods();
-
         updateTotalCalories();
 
-        // Clear form inputs after submission
+        // Clear input field
         foodForm.reset();
-});
+    });
 
-     // Reset button
 
-        const resetBtn = document.getElementById("resetBtn");
+    // ===============================
+    // RESET BUTTON
+    // ===============================
+    resetBtn.addEventListener("click", function () {
 
-        resetBtn.addEventListener("click", function () {
-
-        const confirmReset = confirm("Are you sure you want to reset your calorie tracker?");
+        // Ask user for confirmation
+        const confirmReset = confirm("Reset all data?");
 
         if (!confirmReset) return;
 
-        // Clear array
+        // Clear all foods from memory
         foods = [];
 
-        // Clear localStorage
+        // Remove from localStorage
         localStorage.removeItem("foods");
 
         // Update UI
         displayFoods();
         updateTotalCalories();
-      });
-      
-    // Runs once when page loads to show existing items (if any)
+    });
 
+
+    // Initial render when page loads
     displayFoods();
     updateTotalCalories();
 });
 
-// This function updates the UI and shows all food items
 
+// ===============================
+// DISPLAY FOODS ON SCREEN
+// ===============================
 function displayFoods() {
 
-    // Get the UL element from HTML
     const foodList = document.getElementById("foodList");
 
-    // Clear previous list to avoid duplicates
+    // Clear list before re-rendering
     foodList.innerHTML = "";
 
-    // Loop through all food items in the array
+    // Loop through all foods in array
     foods.forEach(function (food) {
 
         // Create a new list item
         const li = document.createElement("li");
 
-        // Add Tailwind styling for better UI
+        // Add styling classes (Tailwind)
         li.classList.add(
             "flex",
             "justify-between",
@@ -113,65 +163,65 @@ function displayFoods() {
         li.innerHTML = `
             <span>${food.name} - ${food.calories} cal</span>
 
-            <!-- Delete button for each item -->
-            <button 
-                onclick="deleteFood(${food.id})"
-                class="bg-red-500 text-white px-2 py-1 rounded"
-            >
+            <!-- Delete button -->
+            <button onclick="deleteFood(${food.id})"
+                class="bg-red-500 text-white px-2 py-1 rounded">
                 Delete
             </button>
         `;
 
-        // Add item to the list
+        // Add item to list
         foodList.appendChild(li);
     });
 }
 
 
-
-// Runs when user clicks delete button
-
+// ===============================
+// DELETE FOOD ITEM
+// ===============================
 function deleteFood(id) {
 
-    // Ask user for confirmation before deleting
-    const confirmDelete = confirm("Are you sure you want to delete this food item?");
+    // Ask before deleting
+    const confirmDelete = confirm("Delete this item?");
 
-    // If user clicks Cancel, stop function
     if (!confirmDelete) return;
 
-    // Remove selected food item from array
+    // Remove item from array
     foods = foods.filter(function (food) {
         return food.id !== id;
     });
-    
-    // Save to local Storage
-    saveToLocalStorage(); 
 
-    // Update UI after deletion
+    // Save updated list
+    saveToLocalStorage();
+
+    // Refresh UI
     displayFoods();
-   
-    // update calories
     updateTotalCalories();
 }
 
-// calculates the total
+
+// ===============================
+// TOTAL CALORIES CALCULATION
+// ===============================
 function updateTotalCalories() {
 
     let total = 0;
 
-    // Loop through all food items
+    // Add all calories together
     foods.forEach(function (food) {
         total += food.calories;
     });
 
-    // Display total in HTML
+    // Show total on screen
     document.getElementById("totalCalories").textContent = total;
 }
 
-updateTotalCalories();
 
-// saves to local Storage
+// ===============================
+// SAVE TO LOCAL STORAGE
+// ===============================
+function saveToLocalStorage() {
 
-function saveToLocalStorage(){
-    localStorage.setItem("foods", JSON.stringify(foods))
+    // Convert array to string and store in browser memory
+    localStorage.setItem("foods", JSON.stringify(foods));
 }
