@@ -1,0 +1,152 @@
+[
+  {
+    "id": 1,
+    "name": "Rice",
+    "calories": 200
+  },
+  {
+    "id": 2,
+    "name": "Ugali",
+    "calories": 350
+  },
+  {
+    "id": 3,
+    "name": "Chicken",
+    "calories": 250
+  },
+  {
+    "id": 4,
+    "name": "Banana",
+    "calories": 105
+  },
+  {
+    "id": 5,
+    "name": "Chapati",
+    "calories": 300
+  },
+  {
+    "id": 6,
+    "name": "Beans",
+    "calories": 220
+  },
+  {
+    "id": 7,
+    "name": "Beef",
+    "calories": 280
+  },
+  {
+    "id": 8,
+    "name": "Fish",
+    "calories": 180
+  },
+  {
+    "id": 9,
+    "name": "Egg",
+    "calories": 78
+  },
+  {
+    "id": 10,
+    "name": "Milk",
+    "calories": 120
+  },
+  {
+    "id": 11,
+    "name": "Bread",
+    "calories": 80
+  },
+  {
+    "id": 12,
+    "name": "Mandazi",
+    "calories": 250
+  },
+  {
+    "id": 13,
+    "name": "Pilau",
+    "calories": 400
+  },
+  {
+    "id": 14,
+    "name": "Githeri",
+    "calories": 330
+  },
+  {
+    "id": 15,
+    "name": "Sukuma Wiki",
+    "calories": 70
+  },
+  {
+    "id": 16,
+    "name": "Matoke",
+    "calories": 240
+  },
+  {
+    "id": 17,
+    "name": "Avocado",
+    "calories": 160
+  },
+  {
+    "id": 18,
+    "name": "Apple",
+    "calories": 95
+  },
+  {
+    "id": 19,
+    "name": "Orange",
+    "calories": 62
+  },
+  {
+    "id": 20,
+    "name": "Mango",
+    "calories": 135
+  },
+  {
+    "id": 21,
+    "name": "Tea",
+    "calories": 40
+  },
+  {
+    "id": 22,
+    "name": "Coffee",
+    "calories": 5
+  },
+  {
+    "id": 23,
+    "name": "Sausage",
+    "calories": 150
+  },
+  {
+    "id": 24,
+    "name": "French Fries",
+    "calories": 365
+  },
+  {
+    "id": 25,
+    "name": "Burger",
+    "calories": 550
+  },
+  {
+    "id": 26,
+    "name": "Pizza",
+    "calories": 285
+  },
+  {
+    "id": 27,
+    "name": "Spaghetti",
+    "calories": 220
+  },
+  {
+    "id": 28,
+    "name": "Pancakes",
+    "calories": 230
+  },
+  {
+    "id": 29,
+    "name": "Yogurt",
+    "calories": 100
+  },
+  {
+    "id": 30,
+    "name": "Peanut Butter",
+    "calories": 190
+  }
+]
