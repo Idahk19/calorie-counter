@@ -1,4 +1,4 @@
-# Calorie Counter App
+# Calorie Counter 
 
 ## Project Overview
 
