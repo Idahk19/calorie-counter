@@ -48,61 +48,69 @@ document.addEventListener("DOMContentLoaded", function () {
             submitBtn.textContent = "Failed to load data";
     });
 
+
+// Stores the name of a food that was NOT found in the database
+// This is used later when user enters calories manually
+let pendingManualFood = null;
+
+
+// Runs whenever the user submits the form
+foodForm.addEventListener("submit", function (event) {
+
+    // Prevent page refresh on form submission
+    event.preventDefault();
+
+    // Get the food name entered by the user and remove extra spaces
+    const name = foodNameInput.value.trim();
+
+    // Search for the food in the loaded database (JSON file)
+    const foundFood = foodDatabase.find(food =>
+        food.name.toLowerCase().includes(name.toLowerCase())
+    );
+
     // ===============================
-    // ADD FOOD (FORM SUBMISSION)
+    // IF FOOD IS FOUND IN DATABASE
     // ===============================
-    foodForm.addEventListener("submit", function (event) {
+    if (foundFood) {
 
-        // Stop page from refreshing when form is submitted
-        event.preventDefault();
-
-        // Prevent user from searching before data is ready
-        if (!isDatabaseReady) {
-            alert("Food database is still loading. Please wait...");
-            return;
-        }
-
-        // Get user input and remove extra spaces
-        const name = foodNameInput.value.trim();
-
-        // ===============================
-        // SEARCH FOOD IN DATABASE
-        // ===============================
-        const foundFood = foodDatabase.find(function (food) {
-
-            // Compare ignoring case and spaces
-            return food.name.toLowerCase().includes(name.toLowerCase());
-        });
-
-        // If no match is found
-        if (!foundFood) {
-            alert("Food not found in database");
-            foodForm.reset();
-            return;
-        }
-
-        // ===============================
-        // CREATE FOOD OBJECT
-        // ===============================
+        // Create a food object using data from database
         const foodItem = {
-            id: Date.now(),               // unique ID for deletion
-            name: foundFood.name,         // name from database
-            calories: foundFood.calories  // calories from database
+            id: Date.now(),              // unique ID for deletion
+            name: foundFood.name,        // official food name from database
+            calories: foundFood.calories // calories from database
         };
 
-        // Add new food to today's list
+        // Add food to today's list
         foods.push(foodItem);
 
         // Save updated list to localStorage
         saveToLocalStorage();
 
-        // Update UI
+        // Update UI list on screen
         displayFoods();
+
+        // Recalculate total calories
         updateTotalCalories();
 
         // Clear input field
         foodForm.reset();
-    });
+
+        // Hide manual input box (in case it was open before)
+        hideManualBox();
+
+        return; // stop function here
+    }
+
+    // ===============================
+    // IF FOOD IS NOT FOUND IN DATABASE
+    // ===============================
+
+    // Store the unknown food name so we can use it later
+    pendingManualFood = name;
+
+    // Show manual input box for user to enter calories
+    showManualBox(name);
+});
 
 
     // ===============================
@@ -225,3 +233,60 @@ function saveToLocalStorage() {
     // Convert array to string and store in browser memory
     localStorage.setItem("foods", JSON.stringify(foods));
 }
+
+// Shows the manual calorie input box when food is not found
+function showManualBox(foodName) {
+
+    // Store the unknown food name so we can use it later when saving
+    pendingManualFood = foodName;
+
+    // Make the hidden manual input box visible on the page
+    document.getElementById("manualCaloriesBox").classList.remove("hidden");
+
+    // Display a message telling the user the food was not found
+    document.getElementById("notFoundMsg").textContent =
+        `"${foodName}" not found. Please enter calories manually.`;
+}
+
+
+// Hides the manual input box and resets its values
+function hideManualBox() {
+
+    // Clear the stored food name
+    pendingManualFood = null;
+
+    // Hide the manual input box again
+    document.getElementById("manualCaloriesBox").classList.add("hidden");
+
+    // Clear any previously entered calories in the input field
+    document.getElementById("manualCaloriesInput").value = "";
+}
+document.getElementById("saveCaloriesBtn").addEventListener("click", function () {
+
+    // Get calories from input field 
+    const calories = Number(document.getElementById("manualCaloriesInput").value);
+
+    // Validate input
+    if (!calories || calories <= 0) {
+        alert("Enter valid calories");
+        return;
+    }
+
+    // Create food object 
+    const foodItem = {
+        id: Date.now(),
+        name: pendingManualFood, 
+        calories: calories
+    };
+
+    // Add to list
+    foods.push(foodItem);
+
+    // Save and update UI
+    saveToLocalStorage();
+    displayFoods();
+    updateTotalCalories();
+
+    // Clear modal + reset state
+    hideManualBox();
+});
