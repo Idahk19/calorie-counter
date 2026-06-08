@@ -169,7 +169,7 @@ function displayFoods() {
         // Create a new list item
         const li = document.createElement("li");
 
-        // Add styling classes (Tailwind)
+        // Add styling 
         li.classList.add(
             "flex",
             "justify-between",
